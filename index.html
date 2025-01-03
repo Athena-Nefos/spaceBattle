@@ -10,30 +10,38 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
-        <div id="game-container">
-            <h1>Space Battle the Game</h1>
-            
-            <div id="battleships-status">
-                <div id="player-ship" class="ship-status">
-                    <h2>USS Assembly</h2>
-                    <div id="shipStats"></div>
-                </div>
-                
-                <div id="alien-ship" class="ship-status">
-                    <h2>Alien Fleet</h2>
-                    <div id="alienStats"></div>
-                </div>
-            </div>
+        <div class="container">
+            <header>
+                <h1>Space Battle Game</h1>
+            </header>
+            <main>
+                <section id="game-info">
+                    <div id="shipStats" class="stats">USS Assembly - Hull: 20</div>
+                    <div id="alienStats" class="stats">Alien Ship - Hull: </div>
+                </section>
     
-            <div id="gameLog"></div>
-            
-            <div class="button-container">
-                <button id="start-game">Start Game</button>
-                <button id="attackBtn" disabled>Attack</button>
-                <button id="retreatBtn" disabled>Retreat</button>
-            </div>
+                <section id="player-ship" class="ship">
+                    <h2> USS Assembly</h2>
+                    <img src="images/USSAssembly.png" alt="USS Assembly" id="uss-image">
+                </section>
+                <section id="alien-ship">
+                    <h2>Alien Ship</h2>
+                    <img src="images/alien-ship-1.png" alt="Alien Ship" />
+                </section>
+    
+                <section id="gameLog" class="game-log">
+                    <!-- Game messages will appear here -->
+                </section>
+    
+                <section id="controls">
+                    <button id="attackBtn">Attack</button>
+                    <button id="retreatBtn">Retreat</button>
+                </section>
+            </main>
+            <footer>
+                <p>&copy; 2025 Space Battle the Game</p>
+            </footer>
         </div>
-        
         <script src="app.js" ></script>
     </body>
 </html>
