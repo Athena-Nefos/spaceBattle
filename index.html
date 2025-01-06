@@ -25,10 +25,6 @@
                     <img src="images/USSAssembly.png" alt="USS Assembly" id="uss-image">
                 </section>
 
-                <div id="missileCount" class="missile-count">
-                    Missiles: 3
-                </div>
-
                 <section id="d-line"></section>
 
                 <section id="alien-ship">
@@ -40,10 +36,17 @@
                     <!-- Game messages will appear here -->
                 </section>
     
-                <section id="controls">
+                <div id="gameControls">
                     <button id="attackBtn">Attack</button>
                     <button id="retreatBtn">Retreat</button>
-                </section>
+                    <button id="missileBtn">Fire Missile</button>
+                </div>
+                <div id="gameStats">
+                    <div id="shipStats"></div>
+                    <div id="alienStats"></div>
+                    <div id="missileCount"></div>
+                </div>
+                <div id="gameLog"></div>
             </main>
             <footer>
                 <p>&copy; 2025 Space Battle the Game</p>
