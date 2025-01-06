@@ -1,3 +1,42 @@
+class WeaponPod {
+    constructor(hull) {
+        this.hull = hull;
+        this.maxHUll = hull;
+        this.isDestroyed = false;
+    }
+    takeDamage(damage) {
+        this.hull -= damage;
+        this.isDestroyed = this.hull <= 0;
+    }
+}
+
+class MaagaShip extends Ship {
+        constructor(name, hull, firepower, accuracy,imageUrl) {
+            super(name, hull, firepower, accuracy, imageUrl);
+            this.weaponPOds = this.generateWeaponPOds();
+            this.allPodsDestroyed = false;
+        }
+generateWeaponPods() {
+    const podCount = Math.floor(Math.random() * 3) +2; //2-4 pods
+    return Array.from({ length: podCount}, () => new WeaponPod(Math.floor(Math.random() * 10) + 5));
+}        
+
+takeDamage(damage) {
+    if (!this.allPodsDestroyed) {
+        const activePods = this.weaponPOds.filter(pod => !pod.isDestroyed);
+        if (activePods.length > 0) {
+            const targetPod = activePods[Math.floor(Math.random() * activePods.length)];
+            targetPod.takeDamage(damage);
+            this.allPodsDestroyed = this.weaponPOds.every(pod => pod.isDestroyed);
+            return false;
+        }
+    }
+    this.hull -= damage;
+    return true;
+}
+
+}
+
 class Ship {
     constructor(name, hull, firepower, accuracy, imageUrl) {
         this.name = name;
@@ -5,12 +44,28 @@ class Ship {
         this.firepower = firepower;
         this.accuracy = accuracy;
         this.imageUrl = imageUrl;
+        //Add new properties 
+        this.hits = 0;
+        this.misses = 0;
+        this.damageDealt = 0;
+        this.sheilds = 0;
     }
 
+    activateSheilds() {
+        const sheildBoost = Math.floor(Math.random() * 5) + 1;
+        this.hull += sheildBoost;
+        this.maxHull += sheildBoost;
+        return sheildBoost;
+    }
+//Update Attack
     attack(target) {
         const hit = Math.random() < this.accuracy;
         if (hit) {
             target.hull -= this.firepower;
+            this.hits++;
+            this.damageDealt += this.firepower;
+        } else {
+            this.misses++;
         }
         return hit;
     }
@@ -28,7 +83,8 @@ class Game {
             'images/alien-ship-3.png',
             'images/alien-ship-4.png',
             'images/alien-ship-5.png',
-            'images/alien-ship-6.png'
+            'images/alien-ship-6.png',
+            'images/AlienMegaShip'
         ];
 
         this.playerShip = new Ship(
@@ -39,12 +95,19 @@ class Game {
             'images/USSAssembly.png'
         );
 
+        this.missiles = 3;
+        this.roundNumber = 1;
+        this.totalDamageDealt = 0;
+        this.totalDamageReceived = 0;
         this.alienFleet = this.generateAliens();
         this.currentAlienIndex = 0;
         this.gameOver = false;
+        this.activeAliens = [];
 
         this.attack = this.attack.bind(this);
         this.retreat = this.retreat.bind(this);
+        this.fireMissile = this.fireMissile.bind(this);
+        this.selectTarget = this.selectTarget.bind(this);
     }
 
     generateAliens() {

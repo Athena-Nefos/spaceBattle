@@ -39,6 +39,13 @@ main {
     text-align: center;
 }
 
+#d-line {
+    border-top: 3px solid #1010de;
+    width: 300px;
+    margin-top: 20px;
+}
+
+
 #alien-ship img {
     max-width: 100%;
     max-height: 150px;
