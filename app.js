@@ -111,6 +111,74 @@ class Game {
     }
 
     generateAliens() {
+        const fleetSize = Math.floor(Math.random() * 4) + 3; //random 3-6 ships
+        const fleet = [];
+
+        //generate regular ships
+        for (let i = 0; i < fleetSize - 1; i++) {
+            fleet.push(new Ship(
+                `Alien Ship ${i + 1}`,
+                Math.floor(Math.random() * 4) + 3, // hull 3-6
+                Math.floor(Math.random() * 3) + 2, //firepower 2-4
+                Math.random() * 0.2 + 0.6, //accuracy
+                this.alienImages[i]
+             ));
+             return fleet;
+        }
+        //methods to handle multiple aliens
+        activateAliens() {
+            const maxActive = Math.min(3, this.alienFleet.length - this.currentAlienIndex);
+            const activeCount = Math.floor(Math.random() * maxActive) + 1;
+            
+            this.activeAliens = this.alienFleet
+                .slice(this.currentAlienIndex, this.currentAlienIndex + activeCount)
+                .filter(alien => !alien.isDestroyed());
+        }
+        
+        // Update attack() method to handle multiple aliens:
+        attack() {
+            if (this.gameOver) return;
+        
+            // Activate shields with 30% chance
+            if (Math.random() < 0.3) {
+                const shieldBoost = this.playerShip.activateShields();
+                this.updateGameLog(`Shields activated! +${shieldBoost} hull points`);
+            }
+        
+            // Generate active alien group
+            this.activateAliens();
+            
+            // Player attacks one selected alien
+            const target = this.activeAliens[0]; // Simplified - You can add target selection later
+            const hitAlien = this.playerShip.attack(target);
+            this.logBattleStats(this.playerShip, target, hitAlien, this.playerShip.firepower);
+        
+            // All active aliens counter-attack
+            for (const alien of this.activeAliens) {
+                if (!alien.isDestroyed()) {
+                    const hitPlayer = alien.attack(this.playerShip);
+                    this.logBattleStats(alien, this.playerShip, hitPlayer, alien.firepower);
+                    
+                    if (this.playerShip.isDestroyed()) {
+                        this.defeat();
+                        return;
+                    }
+                }
+            }
+        
+            // Check for destroyed aliens and advance fleet
+            this.activeAliens = this.activeAliens.filter(alien => !alien.isDestroyed());
+            if (this.activeAliens.length === 0) {
+                this.currentAlienIndex++;
+                if (this.currentAlienIndex >= this.alienFleet.length) {
+                    this.victory();
+                }
+            }
+        
+            this.updateUI();
+        }
+        
+    /* generateAliens() {
         return this.alienImages.map((imageUrl, index) => {
             const hull = Math.floor(Math.random() * 4) + 3;
             const firepower = Math.floor(Math.random() * 3) + 2;
@@ -233,7 +301,7 @@ class Game {
         this.updateUI();
         this.updateAlienImage();
     }
-}
+} */
 
 // Start the game when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
